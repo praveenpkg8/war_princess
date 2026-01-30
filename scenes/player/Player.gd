@@ -4,6 +4,8 @@ const SPEED = 200.0
 const SPRINT_MULTIPLIER = 1.5
 const FILTER_MAX = 100.0
 
+@export var kill_front_cone_deg: float = 90.0
+
 signal noise_created(position: Vector2, radius: float)
 signal mask_depleted
 
@@ -150,9 +152,10 @@ func try_kill_enemy():
 func is_behind_enemy(enemy: Node) -> bool:
 	if enemy.has_method("get_facing_direction"):
 		var enemy_facing = enemy.get_facing_direction()
-		var to_enemy = (enemy.global_position - global_position).normalized()
+		var to_player = (global_position - enemy.global_position).normalized()
 		if enemy_facing.length() > 0:
-			return to_enemy.dot(enemy_facing) > 0.3
+			var front_cos = cos(deg_to_rad(kill_front_cone_deg * 0.5))
+			return enemy_facing.dot(to_player) <= front_cos
 	return true  # Can kill if enemy is stationary
 
 func _on_loot_zone_entered(body):

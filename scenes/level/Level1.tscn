@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://level1_001"]
+[gd_scene format=3 uid="uid://dh5oyj0dntapj"]
 
-[ext_resource type="PackedScene" uid="uid://b2c3d4e5f6g7h8" path="res://scenes/enemy/Enemy.tscn" id="enemy_scene"]
-[ext_resource type="Script" path="res://scenes/level/Level1.gd" id="level1_script"]
+[ext_resource type="PackedScene" uid="uid://ddycakdnpf24r" path="res://scenes/enemy/Enemy.tscn" id="enemy_scene"]
+[ext_resource type="Script" uid="uid://djat8qvp3fful" path="res://scenes/level/Level1.gd" id="level1_script"]
 
 [sub_resource type="RectangleShape2D" id="WallShape"]
 size = Vector2(1280, 40)
@@ -9,59 +9,68 @@ size = Vector2(1280, 40)
 [sub_resource type="RectangleShape2D" id="WallShapeVertical"]
 size = Vector2(40, 720)
 
-[sub_resource type="CircleShape2D" id="WinAreaShape"]
-radius = 50.0
-
 [sub_resource type="CircleShape2D" id="CenterWallShape"]
 radius = 100.0
 
-[node name="Level1" type="Node2D"]
+[sub_resource type="CircleShape2D" id="WinAreaShape"]
+radius = 50.0
+
+[sub_resource type="NavigationPolygon" id="NavPoly"]
+outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 1280, 0, 1280, 720, 0, 720), PackedVector2Array(520, 360, 511, 415, 484, 466, 442, 508, 391, 535, 336, 544, 281, 535, 230, 508, 188, 466, 161, 415, 152, 360, 161, 305, 188, 254, 230, 212, 281, 185, 336, 176, 391, 185, 442, 212, 484, 254, 511, 305)])
+
+[node name="Level1" type="Node2D" unique_id=278759383]
 script = ExtResource("level1_script")
 
-[node name="OuterWalls" type="StaticBody2D" parent="."]
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavPoly")
+
+[node name="OuterWalls" type="StaticBody2D" parent="." unique_id=1297224748]
 collision_layer = 4
 collision_mask = 0
 
-[node name="TopWall" type="CollisionShape2D" parent="OuterWalls"]
+[node name="TopWall" type="CollisionShape2D" parent="OuterWalls" unique_id=593549747]
 position = Vector2(640, -20)
 shape = SubResource("WallShape")
 
-[node name="BottomWall" type="CollisionShape2D" parent="OuterWalls"]
+[node name="BottomWall" type="CollisionShape2D" parent="OuterWalls" unique_id=1117495436]
 position = Vector2(640, 740)
 shape = SubResource("WallShape")
 
-[node name="LeftWall" type="CollisionShape2D" parent="OuterWalls"]
+[node name="LeftWall" type="CollisionShape2D" parent="OuterWalls" unique_id=2058669221]
 position = Vector2(-20, 360)
 shape = SubResource("WallShapeVertical")
 
-[node name="RightWall" type="CollisionShape2D" parent="OuterWalls"]
+[node name="RightWall" type="CollisionShape2D" parent="OuterWalls" unique_id=387091847]
 position = Vector2(1300, 360)
 shape = SubResource("WallShapeVertical")
 
-[node name="CenterObstacle" type="StaticBody2D" parent="."]
+[node name="CenterObstacle" type="StaticBody2D" parent="." unique_id=1829316962]
+position = Vector2(400, 360)
 collision_layer = 4
 collision_mask = 0
-position = Vector2(400, 360)
 
-[node name="ObstacleShape" type="CollisionShape2D" parent="CenterObstacle"]
+[node name="ObstacleVisual" type="Polygon2D" parent="CenterObstacle" unique_id=2015321043]
+color = Color(0.25, 0.25, 0.25, 1)
+polygon = PackedVector2Array(100, 0, 92, 38, 71, 71, 38, 92, 0, 100, -38, 92, -71, 71, -92, 38, -100, 0, -92, -38, -71, -71, -38, -92, 0, -100, 38, -92, 71, -71, 92, -38)
+
+[node name="ObstacleShape" type="CollisionShape2D" parent="CenterObstacle" unique_id=1257987693]
 shape = SubResource("CenterWallShape")
 
-[node name="StartArea" type="Marker2D" parent="."]
+[node name="StartArea" type="Marker2D" parent="." unique_id=800738511]
 position = Vector2(150, 400)
 
-[node name="PrisonerCell" type="Area2D" parent="."]
+[node name="PrisonerCell" type="Area2D" parent="." unique_id=1134064622]
 position = Vector2(1100, 400)
 collision_layer = 4
-collision_mask = 1
 
-[node name="WinCollision" type="CollisionShape2D" parent="PrisonerCell"]
+[node name="WinCollision" type="CollisionShape2D" parent="PrisonerCell" unique_id=2001586102]
 shape = SubResource("WinAreaShape")
 
-[node name="PrisonerSprite" type="Polygon2D" parent="PrisonerCell"]
+[node name="PrisonerSprite" type="Polygon2D" parent="PrisonerCell" unique_id=571397352]
 color = Color(0.2, 0.2, 0.8, 1)
 polygon = PackedVector2Array(-16, -24, 16, -24, 16, 24, -16, 24)
 
-[node name="WinLabel" type="Label" parent="PrisonerCell"]
+[node name="WinLabel" type="Label" parent="PrisonerCell" unique_id=547206891]
 offset_left = -40.0
 offset_top = -60.0
 offset_right = 40.0
@@ -69,20 +78,20 @@ offset_bottom = -40.0
 text = "RESCUE!"
 horizontal_alignment = 1
 
-[node name="Enemy1" parent="." instance=ExtResource("enemy_scene")]
+[node name="Enemy1" parent="." unique_id=140941403 instance=ExtResource("enemy_scene")]
 position = Vector2(450, 250)
-waypoints = PackedVector2Array(350, 250, 550, 250, 550, 350, 350, 350)
+waypoints = Array[Vector2]([Vector2(150, 250), Vector2(250, 250), Vector2(250, 450), Vector2(150, 450)])
 
-[node name="Enemy2" parent="." instance=ExtResource("enemy_scene")]
+[node name="Enemy2" parent="." unique_id=488217104 instance=ExtResource("enemy_scene")]
 position = Vector2(700, 500)
-waypoints = PackedVector2Array(600, 500, 800, 500)
+waypoints = Array[Vector2]([Vector2(900, 200), Vector2(1100, 200), Vector2(1100, 500), Vector2(900, 500)])
 
-[node name="Enemy3" parent="." instance=ExtResource("enemy_scene")]
+[node name="Enemy3" parent="." unique_id=311395830 instance=ExtResource("enemy_scene")]
 position = Vector2(900, 300)
-waypoints = PackedVector2Array(850, 250, 950, 250, 950, 400, 850, 400)
+waypoints = Array[Vector2]([Vector2(350, 120), Vector2(450, 120), Vector2(450, 220), Vector2(350, 220)])
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=2021850199]
+z_index = -10
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.15, 0.15, 0.15, 1)
-z_index = -10

@@ -24,12 +24,11 @@ func update(delta):
 	if can_see_player():
 		has_seen_player = true
 		lose_sight_timer = 0.0
-		var direction = (player_ref.global_position - enemy.global_position).normalized()
-		enemy.velocity = direction * CHASE_SPEED
-		enemy.move_and_slide()
+		enemy.move_towards(player_ref.global_position, CHASE_SPEED)
 
 		# Update facing direction
-		enemy.set_facing_direction(direction)
+		if enemy.velocity.length() > 0:
+			enemy.set_facing_direction(enemy.velocity.normalized())
 
 		# Check if caught player
 		if enemy.global_position.distance_to(player_ref.global_position) < 20:

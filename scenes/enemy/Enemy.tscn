@@ -19,6 +19,10 @@ radius = 150.0
 script = ExtResource("1_xyz01")
 collision_layer = 2
 collision_mask = 7
+reach_tolerance = 10.0
+stuck_timeout = 2.5
+stuck_min_speed = 5.0
+stuck_progress_epsilon = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("EnemyShape")
@@ -62,6 +66,17 @@ offset_right = 40.0
 offset_bottom = -30.0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+radius = 14.0
+path_desired_distance = 6.0
+target_desired_distance = 6.0
+avoidance_enabled = true
+max_speed = 200.0
+neighbor_distance = 50.0
+max_neighbors = 8
+time_horizon = 1.5
+time_horizon_obstacles = 1.0
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 target_position = Vector2(200, 0)

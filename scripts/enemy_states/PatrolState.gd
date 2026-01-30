@@ -29,16 +29,15 @@ func update(delta):
 		return
 
 	var target = enemy.waypoints[current_waypoint_index]
-	var direction = (target - enemy.global_position)
-	var distance = direction.length()
-
-	if distance < WAYPOINT_THRESHOLD:
+	if enemy.is_target_reached(target):
 		is_waiting = true
 		enemy.velocity = Vector2.ZERO
+	elif enemy.is_stuck(target, delta):
+		current_waypoint_index = (current_waypoint_index + 1) % enemy.waypoints.size()
+		is_waiting = false
+		wait_timer = 0.0
 	else:
-		direction = direction.normalized()
-		enemy.velocity = direction * SPEED
-		enemy.move_and_slide()
+		enemy.move_towards(target, SPEED)
 
 	# Update facing direction
 	if enemy.velocity.length() > 0:

@@ -3,6 +3,10 @@ extends CharacterBody2D
 @export var waypoints: Array[Vector2] = []
 @export var vision_range: float = 200.0
 @export var vision_angle: float = 90.0  # degrees
+@export var reach_tolerance: float = 10.0
+@export var stuck_timeout: float = 2.5
+@export var stuck_min_speed: float = 5.0
+@export var stuck_progress_epsilon: float = 1.0
 
 var investigation_target: Vector2 = Vector2.ZERO
 var is_dead: bool = false
@@ -14,8 +18,17 @@ var state_machine: StateMachine = null
 @onready var hearing_zone = $HearingZone
 @onready var loot_prompt = $LootPrompt
 @onready var state_machine_node = $StateMachine
+@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
 var player_ref: Node = null
+var _nav_desired_velocity: Vector2 = Vector2.ZERO
+var _nav_ready: bool = false
+var _debug_target: Vector2 = Vector2.ZERO
+var _debug_nav_target: Vector2 = Vector2.ZERO
+var _debug_next_pos: Vector2 = Vector2.ZERO
+var _debug_has_path: bool = false
+var _stuck_timer: float = 0.0
+var _last_distance: float = INF
 
 func _ready():
 	# Add to groups
@@ -39,6 +52,13 @@ func _ready():
 
 	# Find player reference
 	call_deferred("_find_player")
+
+	if nav_agent:
+		nav_agent.velocity_computed.connect(_on_nav_velocity_computed)
+	call_deferred("_enable_nav_ready")
+
+func _enable_nav_ready() -> void:
+	_nav_ready = true
 
 func _find_player():
 	player_ref = get_tree().get_first_node_in_group("player")
@@ -138,6 +158,116 @@ func set_facing_direction(direction: Vector2):
 
 func get_facing_direction() -> Vector2:
 	return facing_direction
+
+func move_towards(target: Vector2, speed: float) -> bool:
+	if nav_agent:
+		var nav_target = get_nav_target(target)
+		if nav_agent.target_position != nav_target:
+			nav_agent.target_position = nav_target
+
+		var direct_to_target = nav_target - global_position
+		_debug_target = target
+		_debug_nav_target = nav_target
+		_debug_has_path = not nav_agent.is_navigation_finished()
+		if direct_to_target.length() <= nav_agent.target_desired_distance:
+			velocity = Vector2.ZERO
+			return false
+
+		if not nav_agent.is_target_reachable():
+			return _move_directly(nav_target, speed)
+
+		if nav_agent.is_navigation_finished():
+			return _move_directly(target, speed)
+
+		var next_pos = nav_agent.get_next_path_position()
+		_debug_next_pos = next_pos
+		queue_redraw()
+		var dir = next_pos - global_position
+		if dir.length() <= 0.001:
+			return _move_directly(nav_target, speed)
+
+		_nav_desired_velocity = dir.normalized() * speed
+		if nav_agent.avoidance_enabled:
+			nav_agent.velocity = _nav_desired_velocity
+		else:
+			velocity = _nav_desired_velocity
+			move_and_slide()
+		return true
+
+	return _move_directly(target, speed)
+
+func get_nav_target(point: Vector2) -> Vector2:
+	if not nav_agent:
+		return point
+
+	var map_rid = nav_agent.get_navigation_map()
+	if map_rid.is_valid() and _nav_ready:
+		var iteration_id = NavigationServer2D.map_get_iteration_id(map_rid)
+		if iteration_id <= 0:
+			return point
+		var closest = NavigationServer2D.map_get_closest_point(map_rid, point)
+		if closest == Vector2.ZERO and point.length() > 10.0:
+			return point
+		return closest
+
+	return point
+
+func _move_directly(target: Vector2, speed: float) -> bool:
+	_debug_target = target
+	_debug_nav_target = target
+	_debug_next_pos = target
+	_debug_has_path = false
+	queue_redraw()
+	var direct = target - global_position
+	if direct.length() <= 0.001:
+		velocity = Vector2.ZERO
+		return false
+
+	velocity = direct.normalized() * speed
+	move_and_slide()
+	return true
+
+func is_target_reached(target: Vector2) -> bool:
+	var desired = reach_tolerance
+	if nav_agent:
+		desired = max(desired, nav_agent.target_desired_distance)
+	return global_position.distance_to(target) <= desired
+
+func is_stuck(target: Vector2, delta: float) -> bool:
+	if is_target_reached(target):
+		_stuck_timer = 0.0
+		_last_distance = INF
+		return false
+
+	var distance = global_position.distance_to(target)
+	var made_progress = distance < (_last_distance - stuck_progress_epsilon)
+	if made_progress or velocity.length() >= stuck_min_speed:
+		_stuck_timer = 0.0
+	else:
+		_stuck_timer += delta
+
+	_last_distance = distance
+	return _stuck_timer >= stuck_timeout
+
+func _on_nav_velocity_computed(safe_velocity: Vector2) -> void:
+	if is_dead:
+		return
+	if safe_velocity.length() <= 0.001 and _nav_desired_velocity.length() > 0.001:
+		velocity = _nav_desired_velocity
+	else:
+		velocity = safe_velocity
+	move_and_slide()
+
+func _draw() -> void:
+	# Debug overlay: target (yellow), nav target (cyan), next path (magenta)
+	if _debug_target != Vector2.ZERO:
+		draw_circle(to_local(_debug_target), 4.0, Color(1.0, 0.9, 0.2))
+	if _debug_nav_target != Vector2.ZERO:
+		draw_circle(to_local(_debug_nav_target), 4.0, Color(0.2, 0.9, 1.0))
+	if _debug_next_pos != Vector2.ZERO:
+		draw_circle(to_local(_debug_next_pos), 4.0, Color(1.0, 0.2, 0.9))
+	if _debug_has_path and _debug_next_pos != Vector2.ZERO:
+		draw_line(Vector2.ZERO, to_local(_debug_next_pos), Color(1.0, 0.2, 0.9), 1.5)
 
 func can_be_killed() -> bool:
 	return not is_dead

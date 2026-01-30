@@ -1,9 +1,53 @@
-[gd_scene load_steps=4 format=3 uid="uid://m7j8k9l0n1o2p3"]
+[gd_scene format=3 uid="uid://ds48l7467t53o"]
 
-[ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_abc12"]
+[ext_resource type="Script" uid="uid://bfbinjpd01ec6" path="res://scenes/player/Player.gd" id="1_abc12"]
+[ext_resource type="Texture2D" uid="uid://bdajihwj8vlq8" path="res://assets/sprites/Gemini_Generated_Image_1taem61taem61tae.png" id="2_gfjak"]
 
 [sub_resource type="CircleShape2D" id="PlayerShape"]
 radius = 16.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4kuee"]
+atlas = ExtResource("2_gfjak")
+region = Rect2(43, 7, 198, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_524rm"]
+atlas = ExtResource("2_gfjak")
+region = Rect2(241, 7, 198, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tpg5x"]
+atlas = ExtResource("2_gfjak")
+region = Rect2(439, 7, 198, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c3xxp"]
+atlas = ExtResource("2_gfjak")
+region = Rect2(637, 7, 198, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_npwbq"]
+atlas = ExtResource("2_gfjak")
+region = Rect2(835, 7, 198, 382)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v42im"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4kuee")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_524rm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tpg5x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c3xxp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_npwbq")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
 
 [sub_resource type="CircleShape2D" id="KillZoneShape"]
 radius = 30.0
@@ -11,29 +55,37 @@ radius = 30.0
 [sub_resource type="CircleShape2D" id="LootZoneShape"]
 radius = 40.0
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_layer = 1
+[node name="Player" type="CharacterBody2D" unique_id=1931260955 groups=["player"]]
 collision_mask = 15
 script = ExtResource("1_abc12")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=382476313]
 shape = SubResource("PlayerShape")
 
-[node name="Sprite2D" type="Polygon2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=84254044]
+position = Vector2(-2, -5)
+scale = Vector2(0.25757575, 0.25757575)
+sprite_frames = SubResource("SpriteFrames_v42im")
+animation = &"idle"
+autoplay = "idle"
+frame = 4
+frame_progress = 0.9722744
+
+[node name="Sprite2D" type="Polygon2D" parent="." unique_id=1256536773]
+z_index = 1
 color = Color(0.2, 0.8, 0.2, 1)
 polygon = PackedVector2Array(-12, -16, 12, -16, 16, 0, 12, 16, -12, 16, -16, 0)
-z_index = 1
 
-[node name="KillZone" type="Area2D" parent="."]
+[node name="KillZone" type="Area2D" parent="." unique_id=1579268059]
 collision_layer = 0
 collision_mask = 2
 
-[node name="KillZoneCollision" type="CollisionShape2D" parent="KillZone"]
+[node name="KillZoneCollision" type="CollisionShape2D" parent="KillZone" unique_id=16650857]
 shape = SubResource("KillZoneShape")
 
-[node name="LootZone" type="Area2D" parent="."]
+[node name="LootZone" type="Area2D" parent="." unique_id=617677954]
 collision_layer = 0
 collision_mask = 0
 
-[node name="LootZoneCollision" type="CollisionShape2D" parent="LootZone"]
+[node name="LootZoneCollision" type="CollisionShape2D" parent="LootZone" unique_id=741291809]
 shape = SubResource("LootZoneShape")

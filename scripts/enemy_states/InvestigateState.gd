@@ -28,16 +28,15 @@ func update(delta):
 		look_around(delta)
 		return
 
-	var distance = enemy.global_position.distance_to(investigation_point)
-
-	if distance < TARGET_THRESHOLD:
+	var target = investigation_point
+	if enemy.is_target_reached(target):
 		is_looking = true
 		enemy.velocity = Vector2.ZERO
 		AudioManager.play_alert()
+	elif enemy.is_stuck(target, delta):
+		transition_to("Patrol")
 	else:
-		var direction = (investigation_point - enemy.global_position).normalized()
-		enemy.velocity = direction * INVESTIGATE_SPEED
-		enemy.move_and_slide()
+		enemy.move_towards(target, INVESTIGATE_SPEED)
 
 	# Update facing direction
 	if enemy.velocity.length() > 0:

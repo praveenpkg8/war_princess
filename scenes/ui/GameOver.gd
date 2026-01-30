@@ -8,6 +8,7 @@ extends CanvasLayer
 var death_reason: String = "You were spotted!"
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	restart_button.pressed.connect(_on_restart_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)

@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://ui_gameover_001"]
+
+[ext_resource type="Script" path="res://scenes/ui/GameOver.gd" id="1_gameover_ui"]
+
+[node name="GameOver" type="CanvasLayer"]
+script = ExtResource("1_gameover_ui")
+
+[node name="Background" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.8)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+offset_left = 200.0
+offset_top = 200.0
+offset_right = 600.0
+offset_bottom = 500.0
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+offset_right = 400.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 48
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="ReasonLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+offset_top = 80.0
+offset_right = 400.0
+offset_bottom = 120.0
+text = "You were spotted!"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+offset_top = 140.0
+offset_right = 400.0
+offset_bottom = 144.0
+
+[node name="RestartButton" type="Button" parent="CenterContainer/VBoxContainer"]
+offset_top = 160.0
+offset_right = 400.0
+offset_bottom = 200.0
+text = "Restart (R)"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+offset_top = 220.0
+offset_right = 400.0
+offset_bottom = 260.0
+text = "Quit (Q)"

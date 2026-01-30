@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://main_scene_001"]
+
+[ext_resource type="PackedScene" uid="uid://level1_001" path="res://scenes/level/Level1.tscn" id="level1"]
+[ext_resource type="Script" path="res://scenes/player/Player.gd" id="player_script"]
+[ext_resource type="PackedScene" uid="uid://ui_mask_001" path="res://scenes/ui/MaskUI.tscn" id="mask_ui"]
+[ext_resource type="PackedScene" uid="uid://ui_gameover_001" path="res://scenes/ui/GameOver.tscn" id="gameover_ui"]
+
+[sub_resource type="CircleShape2D" id="PlayerCollisionShape"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="KillZoneShape"]
+radius = 30.0
+
+[sub_resource type="CircleShape2D" id="LootZoneShape"]
+radius = 40.0
+
+[node name="Main" type="Node2D"]
+
+[node name="Level1" parent="." instance=ExtResource("level1")]
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+position = Vector2(150, 400)
+collision_layer = 1
+collision_mask = 15
+script = ExtResource("player_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("PlayerCollisionShape")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+modulate = Color(0.2, 0.8, 0.2, 1)
+z_index = 1
+
+[node name="KillZone" type="Area2D" parent="Player"]
+collision_layer = 0
+collision_mask = 2
+
+[node name="KillZoneCollision" type="CollisionShape2D" parent="Player/KillZone"]
+shape = SubResource("KillZoneShape")
+
+[node name="LootZone" type="Area2D" parent="Player"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="LootZoneCollision" type="CollisionShape2D" parent="Player/LootZone"]
+shape = SubResource("LootZoneShape")
+
+[node name="Camera2D" type="Camera2D"]
+position_smoothing_enabled = true
+position_smoothing_speed = 5.0
+zoom = Vector2(1.5, 1.5)
+
+[node name="MaskUI" parent="." instance=ExtResource("mask_ui")]
+
+[node name="GameOver" parent="." instance=ExtResource("gameover_ui")]

@@ -1,0 +1,88 @@
+[gd_scene load_steps=7 format=3 uid="uid://level1_001"]
+
+[ext_resource type="TileSet" uid="uid://tileset_001" path="res://scenes/level/DefaultTileSet.tres" id="tileset"]
+[ext_resource type="Script" path="res://scenes/enemy/Enemy.gd" id="enemy_script"]
+[ext_resource type="Script" path="res://scenes/level/Level1.gd" id="level1_script"]
+
+[sub_resource type="RectangleShape2D" id="WallShape"]
+size = Vector2(32, 32)
+
+[sub_resource type="CircleShape2D" id="WinAreaShape"]
+radius = 50.0
+
+[sub_resource type="CircleShape2D" id="WallCollision"]
+radius = 1280.0
+
+[node name="Level1" type="Node2D"]
+script = ExtResource("level1_script")
+
+[node name="OuterWalls" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="TopWall" type="CollisionShape2D" parent="OuterWalls"]
+position = Vector2(640, -20)
+shape = SubResource("WallShape")
+
+[node name="BottomWall" type="CollisionShape2D" parent="OuterWalls"]
+position = Vector2(640, 740)
+shape = SubResource("WallShape")
+
+[node name="LeftWall" type="CollisionShape2D" parent="OuterWalls"]
+position = Vector2(-20, 360)
+shape = SubResource("WallShape")
+
+[node name="RightWall" type="CollisionShape2D" parent="OuterWalls"]
+position = Vector2(1300, 360)
+shape = SubResource("WallShape")
+
+[node name="CenterWalls" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 0
+
+[node name="Wall1" type="CollisionShape2D" parent="CenterWalls"]
+position = Vector2(400, 360)
+shape = SubResource("WallCollision")
+
+[node name="StartArea" type="Marker2D"]
+position = Vector2(150, 400)
+
+[node name="PrisonerCell" type="Area2D"]
+position = Vector2(1100, 400)
+collision_layer = 4
+collision_mask = 1
+
+[node name="WinCollision" type="CollisionShape2D" parent="PrisonerCell"]
+shape = SubResource("WinAreaShape")
+
+[node name="PrisonerSprite" type="Sprite2D" parent="PrisonerCell"]
+modulate = Color(0.2, 0.2, 0.8, 1)
+
+[node name="WinLabel" type="Label" parent="PrisonerCell"]
+offset_left = -40.0
+offset_top = -60.0
+offset_right = 40.0
+offset_bottom = -40.0
+text = "RESCUE!"
+horizontal_alignment = 1
+
+[node name="Enemy1" type="CharacterBody2D" groups=["enemy"]]
+position = Vector2(450, 250)
+script = ExtResource("enemy_script")
+waypoints = PackedVector2Array(350, 250, 550, 250, 550, 350, 350, 350)
+
+[node name="Enemy2" type="CharacterBody2D" groups=["enemy"]]
+position = Vector2(700, 500)
+script = ExtResource("enemy_script")
+waypoints = PackedVector2Array(600, 500, 800, 500)
+
+[node name="Enemy3" type="CharacterBody2D" groups=["enemy"]]
+position = Vector2(900, 300)
+script = ExtResource("enemy_script")
+waypoints = PackedVector2Array(850, 250, 950, 250, 950, 400, 850, 400)
+
+[node name="Background" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.15, 0.15, 0.15, 1)
+z_index = -10

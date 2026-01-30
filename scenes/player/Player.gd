@@ -30,7 +30,7 @@ func _ready():
 	kill_collision.shape = kill_shape
 	kill_zone.add_child(kill_collision)
 	kill_zone.body_entered.connect(_on_kill_zone_entered)
-	kill_zone.monitoring = false
+	kill_zone.monitoring = true
 
 	# Setup loot zone
 	var loot_shape = CircleShape2D.new()
@@ -108,6 +108,8 @@ func _process(delta):
 	# Check for interaction
 	if Input.is_action_just_pressed("interact"):
 		try_interact()
+	if Input.is_action_just_pressed("kill"):
+		try_kill_enemy()
 
 func start_coughing():
 	is_coughing = true
@@ -139,7 +141,7 @@ func restore_filter():
 
 func _on_kill_zone_entered(body):
 	if body.is_in_group("enemy"):
-		kill_zone.monitorable = true
+		pass
 
 func try_kill_enemy():
 	var bodies = kill_zone.get_overlapping_bodies()
@@ -147,7 +149,6 @@ func try_kill_enemy():
 		if body.is_in_group("enemy") and body.has_method("can_be_killed"):
 			if is_behind_enemy(body):
 				body.die()
-				kill_zone.monitoring = false
 
 func is_behind_enemy(enemy: Node) -> bool:
 	if enemy.has_method("get_facing_direction"):

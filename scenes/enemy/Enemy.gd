@@ -155,6 +155,8 @@ func set_facing_direction(direction: Vector2):
 	facing_direction = direction.normalized()
 	if facing_direction.length() > 0:
 		sprite.rotation = facing_direction.angle()
+		if vision_cone:
+			vision_cone.rotation = facing_direction.angle()
 
 func get_facing_direction() -> Vector2:
 	return facing_direction

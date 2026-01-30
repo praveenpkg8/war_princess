@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://main_scene_001"]
+
+[ext_resource type="PackedScene" uid="uid://level1_001" path="res://scenes/level/Level1.tscn" id="level1"]
+[ext_resource type="PackedScene" uid="uid://m7j8k9l0n1o2p3" path="res://scenes/player/Player.tscn" id="player_scene"]
+[ext_resource type="PackedScene" uid="uid://ui_mask_001" path="res://scenes/ui/MaskUI.tscn" id="mask_ui"]
+[ext_resource type="PackedScene" uid="uid://ui_gameover_001" path="res://scenes/ui/GameOver.tscn" id="gameover_ui"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Level1" parent="." instance=ExtResource("level1")]
+
+[node name="Player" parent="." instance=ExtResource("player_scene")]
+position = Vector2(150, 400)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position_smoothing_enabled = true
+position_smoothing_speed = 5.0
+zoom = Vector2(1.5, 1.5)
+
+[node name="MaskUI" parent="." instance=ExtResource("mask_ui")]
+
+[node name="GameOver" parent="." instance=ExtResource("gameover_ui")]

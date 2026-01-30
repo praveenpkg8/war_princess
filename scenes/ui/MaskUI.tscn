@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3 uid="uid://ui_mask_001"]
+
+[ext_resource type="Script" path="res://scenes/ui/MaskUI.gd" id="1_mask_ui"]
+
+[node name="MaskUI" type="CanvasLayer"]
+script = ExtResource("1_mask_ui")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 250.0
+offset_bottom = 80.0
+
+[node name="FilterLabel" type="Label" parent="Panel"]
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 220.0
+offset_bottom = 30.0
+text = "FILTER HEALTH"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="Panel"]
+offset_left = 10.0
+offset_top = 35.0
+offset_right = 220.0
+offset_bottom = 55.0
+value = 100.0
+show_percentage = false
+
+[node name="Vignette" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 1, 0, 0)
+mouse_filter = 2
+
+[node name="InteractionPrompt" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -80.0
+offset_right = 100.0
+offset_bottom = -30.0
+mouse_filter = 2
+
+[node name="PromptBackground" type="Panel" parent="InteractionPrompt"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PromptLabel" type="Label" parent="InteractionPrompt/PromptBackground"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Hold E to Loot"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PromptProgress" type="ProgressBar" parent="InteractionPrompt/PromptBackground"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -90.0
+offset_top = -10.0
+offset_right = 90.0
+offset_bottom = 5.0
+value = 0.0
+show_percentage = false

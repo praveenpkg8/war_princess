@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://m7j8k9l0n1o2p3"]
+
+[ext_resource type="Script" path="res://scenes/player/Player.gd" id="1_abc12"]
+
+[sub_resource type="CircleShape2D" id="PlayerShape"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="KillZoneShape"]
+radius = 30.0
+
+[sub_resource type="CircleShape2D" id="LootZoneShape"]
+radius = 40.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 1
+collision_mask = 15
+script = ExtResource("1_abc12")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("PlayerShape")
+
+[node name="Sprite2D" type="Polygon2D" parent="."]
+color = Color(0.2, 0.8, 0.2, 1)
+polygon = PackedVector2Array(-12, -16, 12, -16, 16, 0, 12, 16, -12, 16, -16, 0)
+z_index = 1
+
+[node name="KillZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="KillZoneCollision" type="CollisionShape2D" parent="KillZone"]
+shape = SubResource("KillZoneShape")
+
+[node name="LootZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="LootZoneCollision" type="CollisionShape2D" parent="LootZone"]
+shape = SubResource("LootZoneShape")

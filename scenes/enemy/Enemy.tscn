@@ -1,0 +1,68 @@
+[gd_scene load_steps=8 format=3 uid="uid://b2c3d4e5f6g7h8"]
+
+[ext_resource type="Script" path="res://scenes/enemy/Enemy.gd" id="1_xyz01"]
+[ext_resource type="Script" path="res://scripts/StateMachine.gd" id="statemachine_script"]
+[ext_resource type="Script" path="res://scripts/enemy_states/PatrolState.gd" id="patrol_script"]
+[ext_resource type="Script" path="res://scripts/enemy_states/InvestigateState.gd" id="investigate_script"]
+[ext_resource type="Script" path="res://scripts/enemy_states/ChaseState.gd" id="chase_script"]
+
+[sub_resource type="CircleShape2D" id="EnemyShape"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="VisionShape"]
+radius = 200.0
+
+[sub_resource type="CircleShape2D" id="HearingShape"]
+radius = 150.0
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+script = ExtResource("1_xyz01")
+collision_layer = 2
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("EnemyShape")
+
+[node name="Sprite2D" type="Polygon2D" parent="."]
+color = Color(0.8, 0.2, 0.2, 1)
+polygon = PackedVector2Array(-12, -16, 12, -16, 16, 0, 12, 16, -12, 16, -16, 0)
+z_index = 1
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("statemachine_script")
+
+[node name="PatrolState" type="Node" parent="StateMachine"]
+script = ExtResource("patrol_script")
+
+[node name="InvestigateState" type="Node" parent="StateMachine"]
+script = ExtResource("investigate_script")
+
+[node name="ChaseState" type="Node" parent="StateMachine"]
+script = ExtResource("chase_script")
+
+[node name="VisionCone" type="Area2D" parent="."]
+collision_layer = 5
+collision_mask = 1
+
+[node name="VisionCollision" type="CollisionShape2D" parent="VisionCone"]
+shape = SubResource("VisionShape")
+
+[node name="HearingZone" type="Area2D" parent="."]
+collision_layer = 6
+collision_mask = 0
+
+[node name="HearingCollision" type="CollisionShape2D" parent="HearingZone"]
+shape = SubResource("HearingShape")
+
+[node name="LootPrompt" type="Label" parent="."]
+text = "Hold E to Loot"
+offset_left = -40.0
+offset_top = -50.0
+offset_right = 40.0
+offset_bottom = -30.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(200, 0)
+enabled = false

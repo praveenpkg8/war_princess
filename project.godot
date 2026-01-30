@@ -13,7 +13,7 @@ config_version=5
 config/name="Masked Escape"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3")
-config/icon="res://icon/icon.png"
+config/icon="res://icon/icon.svg"
 
 [autoload]
 
